@@ -23,12 +23,16 @@ const UserController = {
       });
 
       if (!user)
-        res.status(400).send({ message: "User or password is incorrect" });
+        return res
+          .status(400)
+          .send({ message: "User or password is incorrect" });
 
       const isEqual = await bcrypt.compare(req.body.password, user.password);
 
       if (!isEqual)
-        res.status(400).send({ message: "User or password is incorrect" });
+        return res
+          .status(400)
+          .send({ message: "User or password is incorrect" });
 
       const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
       if (user.tokens.length > 4) user.tokens.shift();
@@ -40,6 +44,18 @@ const UserController = {
     } catch (error) {
       console.error(error);
       res.status(400).send({ message: "Login failed" });
+    }
+  },
+
+  async logout(req, res) {
+    try {
+      await User.findByIdAndUpdate(req.user._id, {
+        $pull: { tokens: req.headers.authorization },
+      });
+      res.send({ message: "Logged out successfully" });
+    } catch (error) {
+      console.error(error);
+      res.send(500).send({ message: "Problem found" });
     }
   },
 };
