@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const UserController = {
   async register(req, res) {
@@ -12,6 +13,33 @@ const UserController = {
     } catch (error) {
       console.error(error);
       res.status(400).send({ message: "User could not be created" });
+    }
+  },
+
+  async login(req, res) {
+    try {
+      const user = await User.findOne({
+        $or: [{ username: req.body.user }, { email: req.body.user }],
+      });
+
+      if (!user)
+        res.status(400).send({ message: "User or password is incorrect" });
+
+      const isEqual = await bcrypt.compare(req.body.password, user.password);
+
+      if (!isEqual)
+        res.status(400).send({ message: "User or password is incorrect" });
+
+      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+      if (user.tokens.length > 4) user.tokens.shift();
+      user.tokens.push(token);
+
+      await user.save();
+
+      res.send({ message: `Welcome ${user.username}`, token });
+    } catch (error) {
+      console.error(error);
+      res.status(400).send({ message: "Login failed" });
     }
   },
 };
