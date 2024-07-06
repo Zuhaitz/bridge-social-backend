@@ -10,4 +10,7 @@ const runServer = async () => {
   );
 };
 
+app.use(express.json());
+app.use("/users", require("./routes/users"));
+
 runServer();
