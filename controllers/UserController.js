@@ -16,6 +16,16 @@ const UserController = {
     }
   },
 
+  async getInfo(req, res) {
+    try {
+      const user = await User.findById(req.user._id);
+      res.send(user);
+    } catch (error) {
+      console.error(error);
+      res.status(400).send({ message: "Problem retrieving user info" });
+    }
+  },
+
   async login(req, res) {
     try {
       const user = await User.findOne({
