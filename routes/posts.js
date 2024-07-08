@@ -7,6 +7,7 @@ const router = express.Router();
 router.post("/", authentication, PostController.create);
 router.get("/", PostController.getAll);
 router.put("/id/:id", authentication, isAuthor, PostController.update);
+router.delete("/id/:id", authentication, isAuthor, PostController.delete);
 
 router.put("/like/id/:id", authentication, PostController.addLike);
 router.delete("/like/id/:id", authentication, PostController.removeLike);

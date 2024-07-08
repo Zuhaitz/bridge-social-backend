@@ -37,6 +37,16 @@ const PostController = {
     }
   },
 
+  async delete(req, res) {
+    try {
+      await Post.findByIdAndDelete(req.params.id);
+      res.send({ message: "Post deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(400).send({ message: "Could not delete the post" });
+    }
+  },
+
   async addLike(req, res) {
     try {
       const post = await Post.findByIdAndUpdate(
