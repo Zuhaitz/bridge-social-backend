@@ -16,7 +16,7 @@ const PostController = {
       const { page = 1, limit = 5 } = req.query;
 
       const posts = await Post.find()
-        .populate("createdBy likes.userId")
+        .populate("createdBy comments.commentId likes.userId")
         .limit(limit)
         .skip((page - 1) * limit);
       res.send(posts);
@@ -56,7 +56,7 @@ const PostController = {
         $text: {
           $search: req.params.content,
         },
-      }).populate("createdBy likes.userId");
+      }).populate("createdBy comments.commentId likes.userId");
       res.send(posts);
     } catch (error) {
       console.error(error);
@@ -67,7 +67,7 @@ const PostController = {
   async getById(req, res) {
     try {
       const post = await Post.findById(req.params.id).populate(
-        "createdBy likes.userId"
+        "createdBy comments.commentId likes.userId"
       );
       res.send(post);
     } catch (error) {
