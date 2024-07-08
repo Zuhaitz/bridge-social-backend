@@ -13,7 +13,12 @@ const PostController = {
 
   async getAll(req, res) {
     try {
-      const posts = await Post.find().populate("createdBy likes.userId");
+      const { page = 1, limit = 2 } = req.query;
+
+      const posts = await Post.find()
+        .populate("createdBy likes.userId")
+        .limit(limit)
+        .skip((page - 1) * limit);
       res.send(posts);
     } catch (error) {
       console.error(error);
