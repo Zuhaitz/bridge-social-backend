@@ -5,6 +5,7 @@ const express = require("express");
 const router = express.Router();
 
 router.post("/", authentication, PostController.create);
-router.put("/id/:id", authentication, PostController.addLike);
+router.put("/like/id/:id", authentication, PostController.addLike);
+router.delete("/like/id/:id", authentication, PostController.removeLike);
 
 module.exports = router;

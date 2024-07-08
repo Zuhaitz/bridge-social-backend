@@ -28,6 +28,24 @@ const PostController = {
       res.status(400).send({ message: "Could not like the post" });
     }
   },
+
+  async removeLike(req, res) {
+    try {
+      const post = await Post.findByIdAndUpdate(
+        req.params.id,
+        {
+          $pull: {
+            likes: { userId: req.user._id },
+          },
+        },
+        { new: true }
+      );
+      res.send(post);
+    } catch (error) {
+      console.error(error);
+      res.status(400).send({ message: "Could not remove like the post" });
+    }
+  },
 };
 
 module.exports = PostController;
