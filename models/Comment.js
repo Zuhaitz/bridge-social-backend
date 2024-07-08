@@ -6,7 +6,7 @@ const CommentSchema = mongoose.Schema(
     content: { type: String, required: true },
     respondsTo: { type: ObjectId, ref: "Post", required: true },
     createdBy: { type: ObjectId, ref: "User", required: true },
-    likes: [{ userId: { type: ObjectId, ref: "User" } }],
+    likes: [{ type: ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );

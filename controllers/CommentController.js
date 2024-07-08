@@ -14,7 +14,7 @@ const CommentController = {
         req.params.id,
         {
           $push: {
-            comments: { commentId: comment._id },
+            comments: comment._id,
           },
         },
         { new: true }

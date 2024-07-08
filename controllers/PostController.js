@@ -1,9 +1,13 @@
 const Post = require("../models/Post");
+const User = require("../models/User");
 
 const PostController = {
   async create(req, res) {
     try {
       const post = await Post.create({ ...req.body, createdBy: req.user._id });
+      await User.findByIdAndUpdate(req.user._id, {
+        $push: { posts: post._id },
+      });
       res.status(201).send({ message: "Post created successfully", post });
     } catch (error) {
       console.error(error);
@@ -16,7 +20,7 @@ const PostController = {
       const { page = 1, limit = 5 } = req.query;
 
       const posts = await Post.find()
-        .populate("createdBy comments.commentId likes.userId")
+        .populate("createdBy comments likes")
         .limit(limit)
         .skip((page - 1) * limit);
       res.send(posts);
@@ -56,7 +60,7 @@ const PostController = {
         $text: {
           $search: req.params.content,
         },
-      }).populate("createdBy comments.commentId likes.userId");
+      }).populate("createdBy comments likes");
       res.send(posts);
     } catch (error) {
       console.error(error);
@@ -67,7 +71,7 @@ const PostController = {
   async getById(req, res) {
     try {
       const post = await Post.findById(req.params.id).populate(
-        "createdBy comments.commentId likes.userId"
+        "createdBy comments likes"
       );
       res.send(post);
     } catch (error) {
@@ -82,7 +86,7 @@ const PostController = {
         req.params.id,
         {
           $push: {
-            likes: { userId: req.user._id },
+            likes: req.user._id,
           },
         },
         { new: true }
@@ -100,7 +104,7 @@ const PostController = {
         req.params.id,
         {
           $pull: {
-            likes: { userId: req.user._id },
+            likes: req.user._id,
           },
         },
         { new: true }

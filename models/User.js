@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
+const ObjectId = mongoose.SchemaTypes.ObjectId;
 
 const UserSchema = mongoose.Schema({
   username: { type: String, unique: true },
   email: { type: String, unique: true },
   password: { type: String, required: true },
+  posts: [{ type: ObjectId, ref: "Post" }],
   role: String,
   tokens: [],
 });
