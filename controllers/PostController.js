@@ -45,6 +45,32 @@ const PostController = {
     }
   },
 
+  async getByContent(req, res) {
+    try {
+      const posts = await Post.find({
+        $text: {
+          $search: req.params.content,
+        },
+      }).populate("createdBy likes.userId");
+      res.send(posts);
+    } catch (error) {
+      console.error(error);
+      res.status(400).send({ message: "Could not find the post by name" });
+    }
+  },
+
+  async getById(req, res) {
+    try {
+      const post = await Post.findById(req.params.id).populate(
+        "createdBy likes.userId"
+      );
+      res.send(post);
+    } catch (error) {
+      console.error(error);
+      res.status(400).send({ message: "Could not find the post by id" });
+    }
+  },
+
   async addLike(req, res) {
     try {
       const post = await Post.findByIdAndUpdate(
