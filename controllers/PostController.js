@@ -19,7 +19,21 @@ const PostController = {
       res.send(posts);
     } catch (error) {
       console.error(error);
-      res.status(400).send({ message: "Problem retrieveing posts" });
+      res.status(400).send({ message: "Problem retrieving posts" });
+    }
+  },
+
+  async update(req, res) {
+    try {
+      const post = await Post.findByIdAndUpdate(
+        req.params.id,
+        { content: req.body.content },
+        { new: true }
+      );
+      res.send(post);
+    } catch (error) {
+      console.error(error);
+      res.status(400).send({ message: "Could not update the post" });
     }
   },
 

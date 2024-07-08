@@ -1,3 +1,4 @@
+const Post = require("../models/Post");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
@@ -17,4 +18,20 @@ const authentication = async (req, res, next) => {
   }
 };
 
-module.exports = { authentication };
+const isAuthor = async (req, res, next) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (post.createdBy.toString() !== req.user._id.toString()) {
+      return res.status(403).send({ message: "This post is not yours" });
+    }
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      message: "Problem found while confirming the author",
+    });
+  }
+};
+
+module.exports = { authentication, isAuthor };
