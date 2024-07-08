@@ -13,9 +13,7 @@ const PostController = {
 
   async getAll(req, res) {
     try {
-      const posts = await Post.find().populate(
-        "createdBy comments.userId likes.userId"
-      );
+      const posts = await Post.find().populate("createdBy likes.userId");
       res.send(posts);
     } catch (error) {
       console.error(error);
