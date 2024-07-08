@@ -11,6 +11,18 @@ const PostController = {
     }
   },
 
+  async getAll(req, res) {
+    try {
+      const posts = await Post.find().populate(
+        "createdBy comments.userId likes.userId"
+      );
+      res.send(posts);
+    } catch (error) {
+      console.error(error);
+      res.status(400).send({ message: "Problem retrieveing posts" });
+    }
+  },
+
   async addLike(req, res) {
     try {
       const post = await Post.findByIdAndUpdate(
