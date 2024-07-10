@@ -22,6 +22,10 @@ const UserSchema = mongoose.Schema({
   tokens: [],
 });
 
+UserSchema.index({
+  username: "text",
+});
+
 UserSchema.methods.toJSON = function () {
   const user = this._doc;
   delete user.tokens;

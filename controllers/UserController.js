@@ -68,6 +68,26 @@ const UserController = {
       res.send(500).send({ message: "Problem found" });
     }
   },
+
+  async getById(req, res) {
+    try {
+      const user = await User.findById(req.params.id);
+      res.send(user);
+    } catch (error) {
+      console.error(error);
+      res.status(400).send("Could not find user");
+    }
+  },
+
+  async getByName(req, res) {
+    try {
+      const user = await User.find({ $text: { $search: req.params.name } });
+      res.send(user);
+    } catch (error) {
+      console.error(error);
+      res.status(400).send("Could not find user");
+    }
+  },
 };
 
 module.exports = UserController;
