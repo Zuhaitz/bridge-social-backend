@@ -20,4 +20,7 @@ router.delete(
   CommentController.delete
 );
 
+router.put("/like/id/:id", authentication, CommentController.addLike);
+router.delete("/like/id/:id", authentication, CommentController.removeLike);
+
 module.exports = router;

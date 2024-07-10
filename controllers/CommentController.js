@@ -62,6 +62,38 @@ const CommentController = {
       res.status(400).send("Could not delete comment");
     }
   },
+
+  async addLike(req, res) {
+    try {
+      const comment = await Comment.findByIdAndUpdate(
+        req.params.id,
+        {
+          $push: { likes: req.user._id },
+        },
+        { new: true }
+      );
+      res.send(comment);
+    } catch (error) {
+      console.error(error);
+      res.status(400).send("Problem giving comment like");
+    }
+  },
+
+  async removeLike(req, res) {
+    try {
+      const comment = await Comment.findByIdAndUpdate(
+        req.params.id,
+        {
+          $pull: { likes: req.user._id },
+        },
+        { new: true }
+      );
+      res.send(comment);
+    } catch (error) {
+      console.error(error);
+      res.status(400).send("Problem removing comment like");
+    }
+  },
 };
 
 module.exports = CommentController;
