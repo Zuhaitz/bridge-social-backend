@@ -18,20 +18,34 @@ const authentication = async (req, res, next) => {
   }
 };
 
-const isAuthor = async (req, res, next) => {
-  try {
-    const post = await Post.findById(req.params.id);
+const isAuthor = (collection) => {
+  return async (req, res, next) => {
+    try {
+      const elem = await collection.findById(req.params.id);
 
-    if (post.createdBy.toString() !== req.user._id.toString()) {
-      return res.status(403).send({ message: "This post is not yours" });
+      if (elem.createdBy.toString() !== req.user._id.toString()) {
+        return res.status(403).send({ message: "This post is not yours" });
+      }
+      next();
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        message: "Problem found while confirming the author",
+      });
     }
-    next();
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({
-      message: "Problem found while confirming the author",
-    });
-  }
+  };
+};
+
+exports.grantAccess = function (action, resource) {
+  return async (req, res, next) => {
+    try {
+      const permission = roles.can(req.user.role)[action](resource);
+      // Do something
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
 };
 
 module.exports = { authentication, isAuthor };
