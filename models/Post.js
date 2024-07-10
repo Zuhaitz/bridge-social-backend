@@ -3,7 +3,10 @@ const ObjectId = mongoose.SchemaTypes.ObjectId;
 
 const PostSchema = mongoose.Schema(
   {
-    content: { type: String, required: true },
+    content: {
+      type: String,
+      required: [true, "You must introduce content to post"],
+    },
     createdBy: { type: ObjectId, ref: "User", required: true },
     comments: [{ type: ObjectId, ref: "Comment" }],
     likes: [{ type: ObjectId, ref: "User" }],

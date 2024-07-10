@@ -2,16 +2,18 @@ const Post = require("../models/Post");
 const User = require("../models/User");
 
 const PostController = {
-  async create(req, res) {
+  async create(req, res, next) {
     try {
       const post = await Post.create({ ...req.body, createdBy: req.user._id });
       await User.findByIdAndUpdate(req.user._id, {
         $push: { posts: post._id },
       });
+
       res.status(201).send({ message: "Post created successfully", post });
     } catch (error) {
       console.error(error);
-      res.status(400).send({ message: "Post could not be created" });
+      error.origin = "post";
+      next(error);
     }
   },
 
