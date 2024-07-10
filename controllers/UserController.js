@@ -3,16 +3,16 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const UserController = {
-  async register(req, res) {
+  async register(req, res, next) {
     try {
-      req.body.role = "user";
       const password = await bcrypt.hash(req.body.password, 10);
+      const user = await User.create({ ...req.body, password, role: "user" });
 
-      const user = await User.create({ ...req.body, password });
       res.status(201).send({ message: "User created successfully", user });
     } catch (error) {
       console.error(error);
-      res.status(400).send({ message: "User could not be created" });
+      error.origin = "user";
+      next(error);
     }
   },
 
