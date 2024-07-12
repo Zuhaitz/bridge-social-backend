@@ -90,6 +90,45 @@ const UserController = {
       res.status(400).send("Could not find user");
     }
   },
+
+  async follow(req, res) {
+    try {
+      if (`${req.params.id}` === `${req.user._id}`)
+        return res.status(400).send("You can't follow yourself dummy");
+
+      await User.findByIdAndUpdate(req.params.id, {
+        $push: { followers: req.user._id },
+      });
+
+      const user = await User.findByIdAndUpdate(
+        req.user._id,
+        { $push: { follows: req.params.id } },
+        { new: true }
+      );
+
+      res.send(user);
+    } catch (error) {
+      res.status(400).send("Problem following user");
+    }
+  },
+
+  async unfollow(req, res) {
+    try {
+      await User.findByIdAndUpdate(req.params.id, {
+        $pull: { followers: req.user._id },
+      });
+
+      const user = await User.findByIdAndUpdate(
+        req.user._id,
+        { $pull: { follows: req.params.id } },
+        { new: true }
+      );
+
+      res.send(user);
+    } catch (error) {
+      res.status(400).send("Problem unfollowing user");
+    }
+  },
 };
 
 module.exports = UserController;

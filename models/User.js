@@ -18,6 +18,8 @@ const UserSchema = mongoose.Schema({
     required: [true, "Please, introduce a password"],
   },
   posts: [{ type: ObjectId, ref: "Post" }],
+  follows: [{ type: ObjectId, ref: "User" }],
+  followers: [{ type: ObjectId, ref: "User" }],
   role: String,
   tokens: [],
 });
