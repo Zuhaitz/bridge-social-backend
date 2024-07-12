@@ -6,12 +6,12 @@ const { typeError } = require("./middleware/errors");
 
 const app = express();
 
+const PORT = process.env.PORT || 3000;
+
 const runServer = async () => {
   await dbConnection();
 
-  app.listen(process.env.SERVER_PORT, () =>
-    console.log(`Server listening to port ${process.env.SERVER_PORT}...`)
-  );
+  app.listen(PORT, () => console.log(`Server listening to port ${PORT}...`));
 };
 
 app.use(express.json());
