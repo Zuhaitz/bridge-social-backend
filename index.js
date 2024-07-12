@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const dbConnection = require("./config/database");
 const { typeError } = require("./middleware/errors");
