@@ -20,7 +20,10 @@ const UserController = {
 
   async getInfo(req, res) {
     try {
-      const user = await User.findById(req.user._id).populate("posts");
+      const user = await User.findById(req.user._id)
+        .populate("posts")
+        .populate({ path: "followers", select: "username" });
+
       res.send(user);
     } catch (error) {
       console.error(error);
