@@ -1,4 +1,5 @@
 require("dotenv").config();
+const fs = require("fs");
 
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
@@ -7,8 +8,18 @@ const jwt = require("jsonwebtoken");
 const UserController = {
   async register(req, res, next) {
     try {
+      var img = fs.readFileSync(req.file.path);
+      var encode_img = (image = Buffer.from(img.toString("base64"), "base64"));
+
+      console.log(req.file);
+
       const password = await bcrypt.hash(req.body.password, 10);
-      const user = await User.create({ ...req.body, password, role: "user" });
+      const user = await User.create({
+        ...req.body,
+        password,
+        role: "user",
+        picture: encode_img,
+      });
 
       res.status(201).send({ message: "User created successfully", user });
     } catch (error) {

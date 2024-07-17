@@ -4,7 +4,20 @@ const UserController = require("../controllers/UserController");
 const express = require("express");
 const router = express.Router();
 
-router.post("/", UserController.register);
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./data/images");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + ".png");
+  },
+});
+
+const upload = multer({ storage: storage });
+
+router.post("/", upload.single("picture"), UserController.register);
 router.get("/", authentication, UserController.getInfo);
 router.post("/login", UserController.login);
 router.delete("/logout", authentication, UserController.logout);

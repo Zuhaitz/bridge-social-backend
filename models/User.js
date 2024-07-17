@@ -7,6 +7,10 @@ const UserSchema = mongoose.Schema({
     unique: true,
     required: [true, "Please, introduce an username"],
   },
+  picture: {
+    type: Buffer,
+    contentType: String,
+  },
   email: {
     type: String,
     unique: true,
