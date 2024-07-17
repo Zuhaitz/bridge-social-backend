@@ -38,16 +38,4 @@ const isAuthor = (collection) => {
   };
 };
 
-exports.grantAccess = function (action, resource) {
-  return async (req, res, next) => {
-    try {
-      const permission = roles.can(req.user.role)[action](resource);
-      // Do something
-      next();
-    } catch (error) {
-      next(error);
-    }
-  };
-};
-
 module.exports = { authentication, isAuthor };
