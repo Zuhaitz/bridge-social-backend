@@ -55,7 +55,7 @@ const UserController = {
 
       await user.save();
 
-      res.send({ message: `Welcome ${user.username}`, token });
+      res.send({ message: `Welcome ${user.username}`, user, token });
     } catch (error) {
       console.error(error);
       res.status(400).send({ message: "Login failed" });
