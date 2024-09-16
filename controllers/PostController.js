@@ -25,7 +25,8 @@ const PostController = {
         .populate("createdBy likes")
         .populate({ path: "comments", populate: { path: "createdBy" } })
         .limit(limit)
-        .skip((page - 1) * limit);
+        .skip((page - 1) * limit)
+        .sort({ createdAt: "desc" });
       res.send(posts);
     } catch (error) {
       console.error(error);
