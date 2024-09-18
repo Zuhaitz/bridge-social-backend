@@ -22,7 +22,7 @@ const PostController = {
       const { page = 1, limit = 10 } = req.query;
 
       const posts = await Post.find()
-        .populate("createdBy likes")
+        .populate("createdBy") // removed likes
         .populate({ path: "comments", populate: { path: "createdBy" } })
         .limit(limit)
         .skip((page - 1) * limit)
