@@ -83,7 +83,6 @@ const UserController = {
     try {
       const user = await User.findById(req.params.id).populate({
         path: "posts",
-        populate: { path: "createdBy" },
       });
       res.send(user);
     } catch (error) {
