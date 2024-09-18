@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const { populate } = require("dotenv");
 const jwt = require("jsonwebtoken");
 
 const UserController = {
@@ -21,7 +22,7 @@ const UserController = {
   async getInfo(req, res) {
     try {
       const user = await User.findById(req.user._id)
-        // .populate("posts")
+        .populate("posts")
         .populate({ path: "followers", select: "username" });
 
       res.send(user);
@@ -33,12 +34,9 @@ const UserController = {
 
   async login(req, res) {
     try {
-      const user = await User.findOne(
-        {
-          $or: [{ username: req.body.user }, { email: req.body.user }],
-        },
-        "-posts"
-      );
+      const user = await User.findOne({
+        $or: [{ username: req.body.user }, { email: req.body.user }],
+      });
 
       if (!user)
         return res
@@ -60,11 +58,7 @@ const UserController = {
 
       res.send({
         message: `Welcome ${user.username}`,
-        user: {
-          ...user._doc,
-          followers: user.followers.length,
-          follows: user.follows.length,
-        },
+        user,
         token,
       });
     } catch (error) {
@@ -87,7 +81,10 @@ const UserController = {
 
   async getById(req, res) {
     try {
-      const user = await User.findById(req.params.id);
+      const user = await User.findById(req.params.id).populate({
+        path: "posts",
+        populate: { path: "createdBy" },
+      });
       res.send(user);
     } catch (error) {
       console.error(error);
