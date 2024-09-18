@@ -21,7 +21,7 @@ const UserController = {
   async getInfo(req, res) {
     try {
       const user = await User.findById(req.user._id)
-        .populate("posts")
+        // .populate("posts")
         .populate({ path: "followers", select: "username" });
 
       res.send(user);
@@ -33,9 +33,12 @@ const UserController = {
 
   async login(req, res) {
     try {
-      const user = await User.findOne({
-        $or: [{ username: req.body.user }, { email: req.body.user }],
-      });
+      const user = await User.findOne(
+        {
+          $or: [{ username: req.body.user }, { email: req.body.user }],
+        },
+        "-posts"
+      );
 
       if (!user)
         return res
@@ -55,7 +58,15 @@ const UserController = {
 
       await user.save();
 
-      res.send({ message: `Welcome ${user.username}`, user, token });
+      res.send({
+        message: `Welcome ${user.username}`,
+        user: {
+          ...user._doc,
+          followers: user.followers.length,
+          follows: user.follows.length,
+        },
+        token,
+      });
     } catch (error) {
       console.error(error);
       res.status(400).send({ message: "Login failed" });
