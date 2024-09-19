@@ -34,9 +34,12 @@ const UserController = {
 
   async login(req, res) {
     try {
-      const user = await User.findOne({
-        $or: [{ username: req.body.user }, { email: req.body.user }],
-      });
+      const user = await User.findOne(
+        {
+          $or: [{ username: req.body.user }, { email: req.body.user }],
+        },
+        "-followers -posts"
+      );
 
       if (!user)
         return res
@@ -81,10 +84,19 @@ const UserController = {
 
   async getById(req, res) {
     try {
-      const user = await User.findById(req.params.id).populate({
-        path: "posts",
-        populate: { path: "createdBy" },
-      });
+      // const user = await User.findById(req.params.id).populate({
+      //   path: "posts",
+      //   populate: { path: "createdBy" },
+      // });
+      const user = await User.findById(
+        req.params.id,
+        "username email role posts follows followers"
+      ).lean();
+
+      user.posts = user.posts.length;
+      user.follows = user.follows.length;
+      user.followers = user.followers.length;
+
       res.send(user);
     } catch (error) {
       console.error(error);
@@ -94,7 +106,15 @@ const UserController = {
 
   async getByName(req, res) {
     try {
-      const user = await User.find({ $text: { $search: req.params.name } });
+      const user = await User.find(
+        { $text: { $search: req.params.name } },
+        "username email role posts follows followers"
+      );
+
+      user.posts = user.posts.length;
+      user.follows = user.follows.length;
+      user.followers = user.followers.length;
+
       res.send(user);
     } catch (error) {
       console.error(error);

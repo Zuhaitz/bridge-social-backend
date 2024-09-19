@@ -28,6 +28,10 @@ UserSchema.index({
   username: "text",
 });
 
+UserSchema.virtual("postsCount").get(() => {
+  return this.posts.length;
+});
+
 UserSchema.methods.toJSON = function () {
   const user = this._doc;
   delete user.tokens;
