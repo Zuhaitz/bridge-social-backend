@@ -122,6 +122,20 @@ const UserController = {
     }
   },
 
+  async getPostsById(req, res) {
+    try {
+      const user = await User.find(req.params.id, "posts").populate({
+        path: "posts",
+        populate: { path: "createdBy" },
+      });
+
+      res.send(user);
+    } catch (error) {
+      console.error(error);
+      res.status(400).send("Could get user posts");
+    }
+  },
+
   async follow(req, res) {
     try {
       if (`${req.params.id}` === `${req.user._id}`)

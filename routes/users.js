@@ -11,6 +11,7 @@ router.delete("/logout", authentication, UserController.logout);
 
 router.get("/id/:id", UserController.getById);
 router.get("/name/:name", UserController.getByName);
+router.get("/posts/:id", UserController.getPostsById);
 
 router.put("/follow/:id", authentication, UserController.follow);
 router.delete("/unfollow/:id", authentication, UserController.unfollow);
