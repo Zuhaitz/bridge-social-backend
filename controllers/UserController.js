@@ -132,7 +132,11 @@ const UserController = {
         .populate({
           path: "posts",
           populate: { path: "createdBy" },
-          options: { sort: { createdAt: -1 } },
+          options: {
+            sort: { createdAt: -1 },
+            limit: limit,
+            skip: (page - 1) * limit,
+          },
         });
 
       res.send(user);
