@@ -124,10 +124,16 @@ const UserController = {
 
   async getPostsById(req, res) {
     try {
-      const user = await User.find(req.params.id, "posts").populate({
-        path: "posts",
-        populate: { path: "createdBy" },
-      });
+      const { page = 1, limit = 10 } = req.body;
+
+      const user = await User.findById(req.params.id, "posts")
+        .limit(limit)
+        .skip((page - 1) * limit)
+        .populate({
+          path: "posts",
+          populate: { path: "createdBy" },
+          options: { sort: { createdAt: -1 } },
+        });
 
       res.send(user);
     } catch (error) {
