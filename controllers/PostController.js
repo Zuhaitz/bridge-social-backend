@@ -23,10 +23,16 @@ const PostController = {
 
       const posts = await Post.find()
         .populate("createdBy") // removed likes
-        .populate({ path: "comments", populate: { path: "createdBy" } })
+        // .populate({ path: "comments", populate: { path: "createdBy" } })
         .limit(limit)
         .skip((page - 1) * limit)
-        .sort({ createdAt: "desc" });
+        .sort({ createdAt: "desc" })
+        .lean();
+
+      posts.forEach((post) => {
+        post.comments = post.comments.length;
+      });
+
       res.send(posts);
     } catch (error) {
       console.error(error);
@@ -74,9 +80,26 @@ const PostController = {
 
   async getById(req, res) {
     try {
-      const post = await Post.findById(req.params.id).populate(
-        "createdBy comments likes"
-      );
+      // const post = await Post.findById(req.params.id).populate(
+      //   "createdBy comments likes"
+      // );
+      const { page = 1, limit = 10 } = req.body;
+
+      const post = await Post.findById(req.params.id)
+        .populate("createdBy", "-follows -followers -posts")
+        .populate({
+          path: "comments",
+          populate: {
+            path: "createdBy",
+            select: "-followers -follows -posts",
+          },
+          options: {
+            sort: { createdAt: -1 },
+            limit: limit,
+            skip: (page - 1) * limit,
+          },
+        });
+
       res.send(post);
     } catch (error) {
       console.error(error);

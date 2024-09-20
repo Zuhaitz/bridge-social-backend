@@ -109,7 +109,7 @@ const UserController = {
       const user = await User.find(
         { $text: { $search: req.params.name } },
         "username email role posts follows followers"
-      );
+      ).lean();
 
       user.posts = user.posts.length;
       user.follows = user.follows.length;
