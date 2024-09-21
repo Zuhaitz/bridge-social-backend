@@ -80,22 +80,11 @@ const PostController = {
 
   async getById(req, res) {
     try {
-      const { page = 1, limit = 10 } = req.body;
-
       const post = await Post.findById(req.params.id)
         .populate("createdBy", "-follows -followers -posts")
-        .populate({
-          path: "comments",
-          populate: {
-            path: "createdBy",
-            select: "-followers -follows -posts",
-          },
-          options: {
-            sort: { createdAt: -1 },
-            limit: limit,
-            skip: (page - 1) * limit,
-          },
-        });
+        .lean();
+
+      post.comments = post.comments.length;
 
       res.send(post);
     } catch (error) {
