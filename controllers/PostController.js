@@ -80,9 +80,6 @@ const PostController = {
 
   async getById(req, res) {
     try {
-      // const post = await Post.findById(req.params.id).populate(
-      //   "createdBy comments likes"
-      // );
       const { page = 1, limit = 10 } = req.body;
 
       const post = await Post.findById(req.params.id)
@@ -104,6 +101,32 @@ const PostController = {
     } catch (error) {
       console.error(error);
       res.status(400).send({ message: "Could not find the post by id" });
+    }
+  },
+
+  async getCommentsById(req, res) {
+    try {
+      const { page = 1, limit = 10 } = req.body;
+
+      const post = await Post.findById(req.params.id, "comments").populate({
+        path: "comments",
+        populate: {
+          path: "createdBy",
+          select: "-followers -follows -posts",
+        },
+        options: {
+          sort: { createdAt: -1 },
+          limit: limit,
+          skip: (page - 1) * limit,
+        },
+      });
+
+      res.send(post);
+    } catch (error) {
+      console.error(error);
+      res
+        .status(400)
+        .send({ message: "Could not find the comments of post by id" });
     }
   },
 

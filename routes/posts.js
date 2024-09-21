@@ -12,6 +12,7 @@ router.delete("/id/:id", authentication, isAuthor(Post), PostController.delete);
 
 router.get("/content/:content", PostController.getByContent);
 router.get("/id/:id", PostController.getById);
+router.get("/comments/:id", PostController.getCommentsById);
 
 router.put("/like/:id", authentication, PostController.addLike);
 router.delete("/like/:id", authentication, PostController.removeLike);
