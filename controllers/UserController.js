@@ -2,7 +2,6 @@ require("dotenv").config();
 
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
-const { populate } = require("dotenv");
 const jwt = require("jsonwebtoken");
 
 const UserController = {
@@ -182,6 +181,22 @@ const UserController = {
       res.send(user);
     } catch (error) {
       res.status(400).send("Problem unfollowing user");
+    }
+  },
+
+  async uploadImages(req, res) {
+    try {
+      var objForUpdate = {};
+      if (req.files.banner) objForUpdate.banner = req.files.banner[0].path;
+      if (req.files.profile) objForUpdate.profile = req.files.profile[0].path;
+
+      await User.findByIdAndUpdate(req.user._id, { $set: objForUpdate });
+
+      res.send(objForUpdate);
+    } catch (error) {
+      res
+        .status(400)
+        .send({ message: "Problem uploading images of user", error });
     }
   },
 };
