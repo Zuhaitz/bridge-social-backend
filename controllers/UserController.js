@@ -89,7 +89,7 @@ const UserController = {
       // });
       const user = await User.findById(
         req.params.id,
-        "username email role posts follows followers"
+        "username email picture banner role posts follows followers"
       ).lean();
 
       user.posts = user.posts.length;
@@ -107,7 +107,7 @@ const UserController = {
     try {
       const user = await User.find(
         { $text: { $search: req.params.name } },
-        "username email role posts follows followers"
+        "username email picture banner role posts follows followers"
       ).lean();
 
       user.posts = user.posts.length;
