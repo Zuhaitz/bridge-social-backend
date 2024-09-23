@@ -5,7 +5,6 @@ const dbConnection = require("./config/database");
 const { typeError } = require("./middleware/errors");
 
 const app = express();
-
 const PORT = process.env.PORT || 3000;
 
 const runServer = async () => {
