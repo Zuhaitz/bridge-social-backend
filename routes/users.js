@@ -22,7 +22,7 @@ router.post(
   authentication,
   upload.fields([
     { name: "banner", maxCount: 1 },
-    { name: "profile", maxCount: 1 },
+    { name: "picture", maxCount: 1 },
   ]),
   UserController.uploadImages
 );

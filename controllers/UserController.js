@@ -188,7 +188,7 @@ const UserController = {
     try {
       var objForUpdate = {};
       if (req.files.banner) objForUpdate.banner = req.files.banner[0].path;
-      if (req.files.profile) objForUpdate.profile = req.files.profile[0].path;
+      if (req.files.picture) objForUpdate.picture = req.files.picture[0].path;
 
       await User.findByIdAndUpdate(req.user._id, { $set: objForUpdate });
 

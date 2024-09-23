@@ -17,7 +17,7 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: [true, "Please, introduce a password"],
   },
-  profile: String,
+  picture: String,
   banner: String,
   posts: [{ type: ObjectId, ref: "Post" }],
   follows: [{ type: ObjectId, ref: "User" }],
