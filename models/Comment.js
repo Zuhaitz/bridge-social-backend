@@ -4,6 +4,7 @@ const ObjectId = mongoose.SchemaTypes.ObjectId;
 const CommentSchema = mongoose.Schema(
   {
     content: { type: String, required: true },
+    picture: String,
     respondsTo: { type: ObjectId, ref: "Post", required: true },
     createdBy: { type: ObjectId, ref: "User", required: true },
     likes: [{ type: ObjectId, ref: "User" }],
