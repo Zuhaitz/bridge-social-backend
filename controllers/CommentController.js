@@ -97,7 +97,7 @@ const CommentController = {
 
   async uploadImage(req, res) {
     try {
-      console.log(req.file);
+      console.log(req.file, req.file.path);
       var objForUpdate = { picture: req.file.path };
 
       await Comment.findByIdAndUpdate(req.params.id, { $set: objForUpdate });
