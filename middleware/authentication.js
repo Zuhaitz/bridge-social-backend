@@ -8,7 +8,10 @@ const authentication = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findOne({ _id: payload._id, tokens: token });
+    const user = await User.findOne(
+      { _id: payload._id, tokens: token },
+      "-followers -follows -posts"
+    );
 
     if (!user) return res.status(401).send({ message: "Not Authorized" });
 
