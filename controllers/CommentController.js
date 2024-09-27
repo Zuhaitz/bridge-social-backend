@@ -94,6 +94,20 @@ const CommentController = {
       res.status(400).send("Problem removing comment like");
     }
   },
+
+  async uploadImage(req, res) {
+    try {
+      console.log(req.file);
+      var objForUpdate = { picture: req.file.path };
+
+      await Comment.findByIdAndUpdate(req.params.id, { $set: objForUpdate });
+
+      res.send(objForUpdate);
+    } catch (error) {
+      console.error(error);
+      res.status(400).send("Problem adding image to comment");
+    }
+  },
 };
 
 module.exports = CommentController;

@@ -13,7 +13,13 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "social",
     format: async (req, file) => "jpeg",
-    public_id: (req, file) => `${file.fieldname}_${req.user._id}`,
+    public_id: (req, file) => {
+      const { baseUrl } = req;
+      const route = baseUrl.slice(1, baseUrl.length);
+      if (route === "comments") return `${file.fieldname}_${req.params.id}`;
+
+      return `${file.fieldname}_${req.user._id}`;
+    },
   },
 });
 
