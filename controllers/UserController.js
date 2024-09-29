@@ -136,7 +136,15 @@ const UserController = {
             limit: limit,
             skip: (page - 1) * limit,
           },
-        });
+        })
+        .lean();
+
+      console.log(user);
+      user.posts = user.posts.map((item) => {
+        item.comments = item.comments.length;
+        return item;
+      });
+      console.log(user);
 
       res.send(user);
     } catch (error) {
