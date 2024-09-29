@@ -139,12 +139,10 @@ const UserController = {
         })
         .lean();
 
-      console.log(user);
       user.posts = user.posts.map((item) => {
         item.comments = item.comments.length;
         return item;
       });
-      console.log(user);
 
       res.send(user);
     } catch (error) {
