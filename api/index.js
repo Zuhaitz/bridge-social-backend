@@ -22,9 +22,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json());
-app.use("/users", require("../routes/users"));
-app.use("/posts", require("../routes/posts"));
-app.use("/comments", require("../routes/comments"));
+app.use("/api/users", require("../routes/users"));
+app.use("/api/posts", require("../routes/posts"));
+app.use("/api/comments", require("../routes/comments"));
 
 app.use(typeError);
 
