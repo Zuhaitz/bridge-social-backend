@@ -22,7 +22,7 @@ const PostController = {
       const { page = 1, limit = 10 } = req.query;
 
       const posts = await Post.find()
-        .populate("createdBy") // removed likes
+        .populate("createdBy", "-follows -followers -posts -tokens -password") // removed likes
         // .populate({ path: "comments", populate: { path: "createdBy" } })
         .limit(limit)
         .skip((page - 1) * limit)
@@ -81,7 +81,7 @@ const PostController = {
   async getById(req, res) {
     try {
       const post = await Post.findById(req.params.id)
-        .populate("createdBy", "-follows -followers -posts")
+        .populate("createdBy", "-follows -followers -posts -tokens -password")
         .lean();
 
       post.comments = post.comments.length;
