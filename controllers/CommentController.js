@@ -6,6 +6,7 @@ const CommentController = {
     try {
       const comment = await Comment.create({
         ...req.body,
+        picture: req.file ? req.file.path : null,
         respondsTo: req.params.id,
         createdBy: req.user._id,
       });
@@ -92,20 +93,6 @@ const CommentController = {
     } catch (error) {
       console.error(error);
       res.status(400).send("Problem removing comment like");
-    }
-  },
-
-  async uploadImage(req, res) {
-    try {
-      console.log(req.file, req.file.path);
-      var objForUpdate = { picture: req.file.path };
-
-      await Comment.findByIdAndUpdate(req.params.id, { $set: objForUpdate });
-
-      res.send(objForUpdate);
-    } catch (error) {
-      console.error(error);
-      res.status(400).send("Problem adding image to comment");
     }
   },
 };
